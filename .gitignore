@@ -204,8 +204,12 @@ $RECYCLE.BIN/
 # *.png
 # *.gif
 
+
 # API keys and secrets
 *.key
 *.pem
 secrets.yml
 config.local.*
+
+# Markdown files
+plan.md
