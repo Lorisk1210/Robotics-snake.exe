@@ -1,8 +1,8 @@
-from robot.api_client import RobotState
+from config import GAME_CONFIG
 import time
 
+
 def initialize(client, token):
-    # Initialize the robot position
     print("Initializing robot position...")
     if client.initialize_robot(token):
         print("Robot initialized successfully.")
@@ -10,20 +10,19 @@ def initialize(client, token):
         print("Failed to initialize robot.")
     time.sleep(1)
     
-    # Move robot to "ready" position
-    print("Moving robot to ready position...")
-    ready_pos = RobotState.ready_pos.value
+    print("Moving robot to default position...")
+    default_pos = GAME_CONFIG["default_position"]
     if client.set_tcp_target(
         token,
-        ready_pos["x"],
-        ready_pos["y"],
-        ready_pos["z"],
-        ready_pos["roll"],
-        ready_pos["pitch"],
-        ready_pos["yaw"],
-        ready_pos["speed"]
+        default_pos["x"],
+        default_pos["y"],
+        default_pos["z"],
+        default_pos["roll"],
+        default_pos["pitch"],
+        default_pos["yaw"],
+        default_pos["speed"]
     ):
-        print("Robot moved to ready position successfully.")
+        print("Robot moved to default position successfully.")
     else:
-        print("Failed to move robot to ready position.")
+        print("Failed to move robot to default position.")
     time.sleep(1)

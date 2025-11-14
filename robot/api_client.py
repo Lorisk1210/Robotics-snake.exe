@@ -1,22 +1,7 @@
 import requests
 from typing import Dict, List, Optional, Tuple
-from enum import Enum
 
 
-class RobotState(Enum):
-    #ready position (ready to grab from above)
-    ready_pos = {
-        "x": 400,
-        "y": 0,
-        "z": 300,
-        "roll": 0,
-        "pitch": 180,
-        "yaw": 180,
-        "speed": 50
-    }
-    pass
-
-# Robot Control and Status Monitoring
 class XArmAPIClient:
     
     # Initialize the API client
