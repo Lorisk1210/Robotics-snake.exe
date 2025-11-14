@@ -7,10 +7,10 @@ STREAM_URL = "https://interactions.ics.unisg.ch/61-102/cam4/live-stream"
 def main():
     cap = cv2.VideoCapture(STREAM_URL)
     if not cap.isOpened():
-        print("❌ Kamera-Stream nicht erreichbar.")
+        print("Kamera-Stream nicht erreichbar.")
         return
 
-    print("✅ Kamera gestartet – erkenne grüne Objekte. Drücke 'q' zum Beenden.")
+    print("Kamera gestartet - erkenne grüne Objekte. Drücke 'q' zum Beenden.")
 
     while True:
         ret, frame = cap.read()

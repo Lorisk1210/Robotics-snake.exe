@@ -8,7 +8,6 @@ def initialize(client, token):
         print("Robot initialized successfully.")
     else:
         print("Failed to initialize robot.")
-    time.sleep(1)
     
     print("Moving robot to default position...")
     default_pos = GAME_CONFIG["default_position"]
@@ -25,4 +24,3 @@ def initialize(client, token):
         print("Robot moved to default position successfully.")
     else:
         print("Failed to move robot to default position.")
-    time.sleep(1)

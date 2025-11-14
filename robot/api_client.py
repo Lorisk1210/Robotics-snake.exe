@@ -1,11 +1,12 @@
 import requests
+import time
 from typing import Dict, List, Optional, Tuple
 
 
 class XArmAPIClient:
     
     # Initialize the API client
-    def __init__(self, base_url: str = "https://api.interactions.ics.unisg.ch/cherrybot2/"):
+    def __init__(self, base_url: str = "https://api.interactions.ics.unisg.ch/cherrybot/"):
         self.base_url = base_url.rstrip('/')
     
         self.session = requests.Session()
@@ -18,17 +19,19 @@ class XArmAPIClient:
         url = f"{self.base_url}/operator"
         try:
             response = self.session.get(url)
+            time.sleep(1)
             
             if response.status_code == 200:
                 data = response.json()
                 return (data['name'], data['email'], data['token'])
             elif response.status_code == 204:
-                return None  # No operator available
+                return None
             else:
                 response.raise_for_status()
                 return None
         except requests.RequestException as e:
             print(f"Failed to get operator info: {e}")
+            time.sleep(1)
             return None
 
     # Register as an operator to gain access to the robot
@@ -44,19 +47,21 @@ class XArmAPIClient:
                 "email": email
             }
             response = self.session.post(url, json=data, headers=headers)
+            time.sleep(1)
             if response.status_code == 200:
                 location = response.headers['Location']
                 token = location.replace("https://api.interactions.ics.unisg.ch/cherrybot/operator/", "")
                 return token
             elif response.status_code == 400:
-                return None # Invalid Input, Object invalid
+                return None
             elif response.status_code == 403:
-                return None # Different Operator already registered
+                return None
             else:
                 response.raise_for_status()
                 return None
         except requests.RequestException as e:
             print(f"Failed to register operator: {e}")
+            time.sleep(1)
             return None
         
     # Delete the current Operator
@@ -64,15 +69,17 @@ class XArmAPIClient:
         url = f"{self.base_url}/operator/{token}"
         try:
             response = self.session.delete(url)
+            time.sleep(1)
             if response.status_code == 200:
                 return True
             elif response.status_code == 404:
-                return False # Operator not found
+                return False
             else:
                 response.raise_for_status()
                 return False
         except requests.RequestException as e:
             print(f"Failed to delete operator: {e}")
+            time.sleep(1)
             return False
 
     # Resets the Robot by moving it back to its original state and position
@@ -84,6 +91,7 @@ class XArmAPIClient:
         }
         try:
             response = self.session.put(url, headers=headers)
+            time.sleep(1)
             if response.status_code == 200:
                 return True
             else:
@@ -91,6 +99,7 @@ class XArmAPIClient:
                 return False
         except requests.RequestException as e:
             print(f"Failed to initialize robot: {e}")
+            time.sleep(1)
             return False
     
     # Retrieves the robots current coordinates and rotation of the robot
@@ -102,6 +111,7 @@ class XArmAPIClient:
         }
         try:
             response = self.session.get(url, headers=headers)
+            time.sleep(1)
             if response.status_code == 200:
                 data = response.json()
                 coord = data['coordinate']
@@ -118,6 +128,7 @@ class XArmAPIClient:
                 return None
         except requests.RequestException as e:
             print(f"Failed to get TCP state: {e}")
+            time.sleep(1)
             return None
 
     # Retrieves the Cherrybots target
@@ -129,6 +140,7 @@ class XArmAPIClient:
         }
         try:
             response = self.session.get(url, headers=headers)
+            time.sleep(1)
             if response.status_code == 200:
                 data = response.json()
                 coord = data['coordinate']
@@ -145,6 +157,7 @@ class XArmAPIClient:
                 return None
         except requests.RequestException as e:
             print(f"Failed to get target: {e}")
+            time.sleep(1)
             return None
 
     # Sets the Cherrybots tcp target, which it will move to
@@ -163,6 +176,7 @@ class XArmAPIClient:
         }
         try:
             response = self.session.put(url, headers=headers, json=data)
+            time.sleep(1)
             if response.status_code == 200:
                 return True
             else:
@@ -170,6 +184,7 @@ class XArmAPIClient:
                 return False
         except requests.RequestException as e:
             print(f"Failed to set TCP target: {e}")
+            time.sleep(1)
             return False
 
     # Changes the robot's gripper opening value
@@ -177,13 +192,12 @@ class XArmAPIClient:
         url = f"{self.base_url}/gripper"
         headers = {
             'accept': '*/*',
-            'Authentication': token
-        }
-        data = {
-            'value': value
+            'Authentication': token,
+            'Content-Type': 'application/json'
         }
         try:
-            response = self.session.put(url, headers=headers, json=data)
+            response = self.session.put(url, headers=headers, json=value)
+            time.sleep(1)
             if response.status_code == 200:
                 return True
             else:
@@ -191,6 +205,7 @@ class XArmAPIClient:
                 return False
         except requests.RequestException as e:
             print(f"Failed to set gripper value: {e}")
+            time.sleep(1)
             return False
 
     # Retrieves the current gripper opening value
@@ -202,6 +217,7 @@ class XArmAPIClient:
         }
         try:
             response = self.session.get(url, headers=headers)
+            time.sleep(1)
             if response.status_code == 200:
                 data = response.json()
                 return data['value']
@@ -210,6 +226,7 @@ class XArmAPIClient:
                 return None
         except requests.RequestException as e:
             print(f"Failed to get gripper value: {e}")
+            time.sleep(1)
             return None
 
         

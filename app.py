@@ -18,14 +18,22 @@ def main():
     game_state = GameState()
     
     print("\n" + "="*50)
-    print("WELCOME TO THE DICE GAME!")
+    print("WELCOME TO THE SNAKES AND LADDERS DICE GAME!")
     print("="*50)
     print("\nGame Rules:")
     print("- You play first, then the robot")
-    print("- Roll the dice and move your figure")
-    print("- Press ENTER when you're done with your turn")
-    print("- First to reach field 10 wins!")
+    print("- Roll the dice and move your figure on the board")
+    print("- First to reach field 30 wins!")
+    print("- Ladders: Field 3->7, 11->19, 15->23")
+    print("- Snakes: Field 6->4, 18->10, 27->16, 29->20")
+    print("- If you land on another player, they go back to field 1!")
     print("="*50 + "\n")
+    
+    print("Initial Setup:")
+    print(f"- Your starting position: Field {game_state.get_player_position()}")
+    print(f"- Robot's starting position: Field {game_state.get_robot_position()}")
+    print("\nMake sure both characters are on field 1 on the board!")
+    input("Press ENTER when ready to start...")
     
     while not game_state.is_game_over():
         if game_state.get_current_turn() == "player":
@@ -34,15 +42,37 @@ def main():
             print("="*50)
             print(f"Your current position: Field {game_state.get_player_position()}")
             print(f"Robot's current position: Field {game_state.get_robot_position()}")
-            print("\n1. Roll the dice")
-            print("2. Move your figure")
-            print("3. Press ENTER when you're done")
+            print("\nInstructions:")
+            print("1. Roll your physical dice")
+            print("2. Enter the value below")
+            print("3. Move your character on the board")
             
             try:
                 dice_value = int(input("\nHow many eyes did you roll? (1-6): "))
                 if 1 <= dice_value <= 6:
+                    old_position = game_state.get_player_position()
+                    old_robot_position = game_state.get_robot_position()
+                    target_field = old_position + dice_value
+                    
+                    # Check if landing on robot's current field BEFORE moving
+                    if target_field == old_robot_position and target_field < game_state.max_field:
+                        print(f"\nCollision detected! You would land on field {target_field} where the robot is.")
+                        print("Please move the robot's character back to field 1 on the physical board.")
+                        input("Press ENTER when you have moved the robot's character to field 1...")
+                        game_state.robot_position = 1
+                        print("Robot's character has been reset to field 1.")
+                    
                     new_position = game_state.move_player(dice_value)
-                    print(f"You moved to field {new_position}!")
+                    
+                    # Handle collision return (None means collision that wasn't pre-handled)
+                    if new_position is None:
+                        # This shouldn't happen now, but just in case
+                        print("Unexpected collision state. Skipping turn.")
+                        continue
+                    
+                    if old_position != new_position:
+                        print(f"\nYou moved from field {old_position} to field {new_position}!")
+                        print("Please move your character on the physical board.")
                     
                     if game_state.is_game_over():
                         break
@@ -52,6 +82,9 @@ def main():
             except ValueError:
                 print("Invalid input. Please enter a number.")
                 continue
+            except KeyboardInterrupt:
+                print("\n\nGame interrupted by user.")
+                break
             
             input("\nPress ENTER when you're ready for the robot's turn...")
             game_state.switch_turn()
@@ -86,7 +119,6 @@ def main():
 
 def login(client):
     operator_info = client.get_operator_info()
-    time.sleep(1)
     
     if operator_info is not None:
         name, email, token = operator_info
@@ -96,11 +128,9 @@ def login(client):
             print("Existing operator deleted successfully.")
         else:
             print("Failed to delete existing operator.")
-        time.sleep(1)
     
     print("\nRegistering new operator...")
     token = client.register_operator("snake.exe", "snake@mail.com")
-    time.sleep(1)
     if token is None:
         print("Failed to register operator. Exiting...")
         return None
