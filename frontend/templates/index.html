@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Snakes & Ladders - Robot Game</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Snakes & Ladders - Robot Game</h1>
+        </header>
+
+        <div class="game-info">
+            <div class="info-card">
+                <h3>Game Rules</h3>
+                <ul>
+                    <li>You play first, then the robot</li>
+                    <li>Roll the dice and move your figure on the board</li>
+                    <li>First to reach field 30 wins!</li>
+                    <li>Ladders: Field 3→7, 11→19, 15→23</li>
+                    <li>Snakes: Field 6→4, 18→10, 27→16, 29→20</li>
+                    <li>If you land on another player, they go back to field 1!</li>
+                </ul>
+            </div>
+
+            <div class="scores">
+                <div class="score-box">
+                    <div class="score-label">Your Position</div>
+                    <div class="score-value" id="player-position">1</div>
+                </div>
+                <div class="score-box">
+                    <div class="score-label">Robot Position</div>
+                    <div class="score-value" id="robot-position">1</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="game-board" id="game-board">
+            <div class="status-message" id="status-message">
+                Click "Start Game" to begin
+            </div>
+
+            <div class="action-area" id="action-area" style="display: none;">
+                <div class="current-turn" id="current-turn">Your Turn</div>
+                
+                <div class="dice-input" id="dice-input">
+                    <label for="dice-value">Enter your dice roll (1-6):</label>
+                    <input type="number" id="dice-value" min="1" max="6" placeholder="1-6">
+                    <button onclick="submitDiceRoll()">Submit</button>
+                </div>
+
+                <div class="waiting-area" id="waiting-area" style="display: none;">
+                    <div class="spinner"></div>
+                    <p id="waiting-message">Please wait...</p>
+                </div>
+            </div>
+
+            <button class="start-button" id="start-button" onclick="startGame()">Start Game</button>
+        </div>
+
+        <div class="log-area">
+            <h3>Game Log</h3>
+            <div class="log-content" id="log-content"></div>
+        </div>
+
+        <div class="game-over" id="game-over" style="display: none;">
+            <div class="game-over-content">
+                <h2 id="winner-message"></h2>
+                <div class="final-scores">
+                    <p>Your final position: <span id="final-player-position"></span></p>
+                    <p>Robot final position: <span id="final-robot-position"></span></p>
+                </div>
+                <button onclick="location.reload()">Play Again</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/game.js') }}"></script>
+</body>
+</html>
+

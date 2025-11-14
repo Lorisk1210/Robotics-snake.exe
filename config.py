@@ -30,8 +30,8 @@ GAME_CONFIG = {
     },
     
     "dice_throw_position": {
-        "x": 500,
-        "y": 200,
+        "x": 550,
+        "y": 250,
         "z": 300,
         "roll": 45,
         "pitch": -135,
